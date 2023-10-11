@@ -37,7 +37,7 @@ $router->get('/admin', ['middleware' => 'admin', function () {
     return "<h1>Hallo, Selamat anda berhasil login sebagai admin</h1>";
 }]);
 
-$router->get('/user', ['middleware' => 'user', function () {
+$router->get('/landingpage', ['middleware' => 'user', function () {
     return "<h1>Hallo, Selamat anda berhasil login sebagai user</h1>";
 }]);
 
@@ -45,19 +45,18 @@ $router->get('/home', 'HomeController@index');
 
 $router->get('/about', 'AboutController@about');
 
+$router->get('/dashboard', 'DashboardController@index');
+
 $router->get('users', 'UsersController@index');
 $router->get('users/{id}', 'UsersController@show');
 $router->get('users/edit/{id}', 'UsersController@edit');
 $router->get('users/delete/{id}', 'UsersController@delete');
-
-$router->get('/dashboard', 'DashboardController@index');
-$router->get('/dashboard/users', 'DashboardController@getAllUser');
-$router->get('/dashboard/users/{userId}', 'DashboardController@getUserById');
-$router->get('/dashboard/items', 'DashboardController@getAllItem');
-$router->get('/dashboard/items/{itemId}', 'DashboardController@getItemById');
+$router->get('users/getAllUser', 'UsersController@getAllUser');
+$router->get('users/getAllUser/{id}', 'UsersController@getAllUser');
 
 $router->get('/item', 'ItemController@index');
 $router->get('/item/{id}', 'ItemController@show');
-$router->get('/item/store/', 'ItemController@store');
 $router->get('/item/update/{id}', 'ItemController@update');
 $router->get('/item/dlete/{id}', 'ItemController@dlete');
+$router->get('/item/getAllItem', 'ItemController@getAllItem');
+$router->get('/item/getAllItem/{id}', 'ItemController@getAllItem');
