@@ -11,8 +11,8 @@ class AboutController extends Controller
         return response()->json([
             'message' => 'This is the about page of this web.',
             'version' => '1.0.0',
-            'author' => 'R',
-            'email' => 'yourname@example.com'
+            'author' => 'Rangga Eka Kusuma Dani',
+            'email' => 'ranggaeka@example.com'
         ], Response::HTTP_OK);    
     }
 }
