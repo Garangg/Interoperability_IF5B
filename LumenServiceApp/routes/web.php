@@ -49,9 +49,9 @@ $router->get('/dashboard', 'DashboardController@index');
 
 $router->get('/users', 'UsersController@index');
 $router->get('/users/getAllUser', 'UsersController@getAllUser');
-$router->get('/users/getAllUser/{id}', 'UsersController@getUserById');
+$router->get('/users/getAllUser/{userId}', 'UsersController@getUserById');
 
 
 $router->get('/item', 'ItemController@index');
 $router->get('/item/getAllItem', 'ItemController@getAllItem');
-$router->get('/item/getAllItem/{id}', 'ItemController@getItemById');
+$router->get('/item/getAllItem/{userId}', 'ItemController@getItemById');
