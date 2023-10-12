@@ -47,16 +47,11 @@ $router->get('/about', 'AboutController@about');
 
 $router->get('/dashboard', 'DashboardController@index');
 
-$router->get('users', 'UsersController@index');
-$router->get('users/{id}', 'UsersController@show');
-$router->get('users/edit/{id}', 'UsersController@edit');
-$router->get('users/delete/{id}', 'UsersController@delete');
-$router->get('users/getAllUser', 'UsersController@getAllUser');
-$router->get('users/getAllUser/{id}', 'UsersController@getAllUser');
+$router->get('/users', 'UsersController@index');
+$router->get('/users/getAllUser', 'UsersController@getAllUser');
+$router->get('/users/getAllUser/{id}', 'UsersController@getUserById');
+
 
 $router->get('/item', 'ItemController@index');
-$router->get('/item/{id}', 'ItemController@show');
-$router->get('/item/update/{id}', 'ItemController@update');
-$router->get('/item/dlete/{id}', 'ItemController@dlete');
 $router->get('/item/getAllItem', 'ItemController@getAllItem');
-$router->get('/item/getAllItem/{id}', 'ItemController@getAllItem');
+$router->get('/item/getAllItem/{id}', 'ItemController@getItemById');
