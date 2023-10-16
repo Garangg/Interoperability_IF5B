@@ -47,11 +47,14 @@ $router->get('/about', 'AboutController@about');
 
 $router->get('/dashboard', 'DashboardController@index');
 
+// 5 Route dari 5 Migrations (Tugas 4)
+
 $router->get('/users', 'UsersController@index');
-$router->get('/users/getAllUser', 'UsersController@getAllUser');
-$router->get('/users/getAllUser/{userId}', 'UsersController@getUserById');
 
+$router->get('/items', 'ItemsController@index');
 
-$router->get('/item', 'ItemController@index');
-$router->get('/item/getAllItem', 'ItemController@getAllItem');
-$router->get('/item/getAllItem/{userId}', 'ItemController@getItemById');
+$router->get('/posts', 'PostsController@index');
+
+$router->get('/categories', 'CategoriesController@index');
+
+$router->get('/tags', 'TagsController@index');
