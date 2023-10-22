@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 Use App\Models\User;
+use Illuminate\Http\Request;
+
 
 class UsersController extends Controller
 {
@@ -18,108 +20,50 @@ class UsersController extends Controller
         return response()->json($users,200);
     }
 
-    // public function getAllUser()
-    // {
-    //     $users = [
-    //         [
-    //             'id' => 1, 
-    //             'name' => 'Joko',
-    //             'email' => 'joko@example.com',
-    //             'address' => 'Bandung',
-    //             'gender' => 'Laki-laki',
-    //         ],
-    //         [
-    //             'id' => 2, 
-    //             'name' => 'Anwar',
-    //             'email' => 'anwar@example.com',
-    //             'address' => 'Jakarta',
-    //             'gender' => 'Laki-laki',
-    //         ],
-    //         [
-    //             'id' => 3, 
-    //             'name' => 'Tini',
-    //             'email' => 'tini@example.com',
-    //             'address' => 'Cimahi',
-    //             'gender' => 'Perempuan',
-    //         ],
-    //         [
-    //             'id' => 4, 
-    //             'name' => 'Putri',
-    //             'email' => 'putri@example.com',
-    //             'address' => 'Bekasi',
-    //             'gender' => 'Perempuan',
-    //         ],
-    //         [
-    //             'id' => 5, 
-    //             'name' => 'Gunawan',
-    //             'email' => 'gugun@example.com',
-    //             'address' => 'Solo',
-    //             'gender' => 'Laki-laki',
-    //         ],
-    //     ];
+    
+    public function store(Request $request){
+        $input = $request->all(); //mengambil semua input dari user
+        $user = User::create($input); //membuat user baru
 
-    //     return response()->json($users);
-    // }
+        return response()->json($user,200); //mengembalikan data user baru dalam bentuk json
+    }
 
-    // public function getUserById($userId)
-    // {
+    public function show($id){
+        $user = User::find($id); //mencari user berdasarkan id
 
-    //     $user = $this->findUserById($userId);
+        if(!$user){
+            abort(404);
+        }
 
-    //     if ($user) {
-    //         return response()->json($user);
-    //     } else {
-    //         return response()->json(['message' => 'Pengguna tidak ditemukan'], 404);
-    //     }
-    // }
+        return response()->json($user,200);
+    }
 
-    // private function findUserById($userId)
-    // {
-    //     $users = [
-    //         [
-    //             'id' => 1, 
-    //             'name' => 'Joko',
-    //             'email' => 'joko@example.com',
-    //             'address' => 'Bandung',
-    //             'gender' => 'Laki-laki',
-    //         ],
-    //         [
-    //             'id' => 2, 
-    //             'name' => 'Anwar',
-    //             'email' => 'anwar@example.com',
-    //             'address' => 'Jakarta',
-    //             'gender' => 'Laki-laki',
-    //         ],
-    //         [
-    //             'id' => 3, 
-    //             'name' => 'Tini',
-    //             'email' => 'tini@example.com',
-    //             'address' => 'Cimahi',
-    //             'gender' => 'Perempuan',
-    //         ],
-    //         [
-    //             'id' => 4, 
-    //             'name' => 'Putri',
-    //             'email' => 'putri@example.com',
-    //             'address' => 'Bekasi',
-    //             'gender' => 'Perempuan',
-    //         ],
-    //         [
-    //             'id' => 5, 
-    //             'name' => 'Gunawan',
-    //             'email' => 'gugun@example.com',
-    //             'address' => 'Solo',
-    //             'gender' => 'Laki-laki',
-    //         ],
-    //     ];
+    public function update(Request $request, $id){
+        $input = $request->all(); //mengambil semua input dari user
+        $user = User::find($id); //mencari user berdasarkan id
 
-    //     foreach ($users as $key => $value) {
-    //         if ($value['id'] == $userId) {
-    //             return $value;
-    //         }
-    //     }
+        if(!$user){
+            abort(404);
+        }
 
-    //     return false;
-    // }
+        $user->fill($input); //mengisi user dengan data baru dari input
+        $user->save(); //menyimpan user ke database
+
+        return response()->json($user,200); //mengembalikan data user yang baru diupdate dalam bentuk json
+    }
+
+    public function destroy($id){
+        $user = User::find($id); //mencari user berdasarkan id
+
+        if(!$user){
+            abort(404);
+        }
+
+        $user->delete(); //menghapus user
+
+        $message = ["message" => "delete success", "user_id" => $id];
+
+        return response()->json($message,200); //mengembalikan pesan ketika user berhasil dihapus
+    }
 
 }

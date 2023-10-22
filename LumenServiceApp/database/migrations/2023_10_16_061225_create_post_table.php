@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->bigIncrements('id');
-
-            $table->string('title',100);
-            $table->enum('status', array('draft','published'))->default('draft');
-            $table->text('content');
+            $table->bigIncrements('id')-> primary;
+            $table->string('post_title',100);
+            $table->string('post_author',100);
+            $table->string('post_category',100);
+            $table->enum('post_status', array('draft','published'))->default('draft');
+            $table->text('post_content');
             $table->integer('user_id')->index('user_id_foreign');
-
             $table->timestamps();
         });
     }

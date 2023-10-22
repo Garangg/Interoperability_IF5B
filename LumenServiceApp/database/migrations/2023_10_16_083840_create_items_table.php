@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('items', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 100)->nullable(false);
-            $table->string('description', 255)->nullable(false);
-            $table->integer('price',255)->nullable(false);
-            $table->integer('quantity')->nullable(false);
+        Schema::create('products', function (Blueprint $table) {
+            $table->bigIncrements('id')->primary;
+            $table->string('product_name', 100)->nullable(false);
+            $table->string('product_description', 255)->nullable(false);
+            $table->integer('category_id')->nullable(false);
+            $table->string('product_brand', 100)->nullable(false);
+            $table->integer('product_price')->nullable(false);
+            $table->integer('product_stock')->nullable(false);
             $table->timestamps();
         });
+
     }
 
     /**
