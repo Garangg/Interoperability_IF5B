@@ -25,11 +25,11 @@ class PostsController extends Controller
                 foreach ($posts->items('data') as $item) {
                     $xmlItem = $xml->addChild('post');
                     $xmlItem->addChild('id', $item->id);
-                    $xmlItem->addChild('post_title', $item->post_title);
-                    $xmlItem->addChild('post_author', $item->post_author);
-                    $xmlItem->addChild('post_category', $item->post_category);
-                    $xmlItem->addChild('post_status', $item->post_status);
-                    $xmlItem->addChild('post_content', $item->post_content);
+                    $xmlItem->addChild('title', $item->title);
+                    $xmlItem->addChild('author', $item->author);
+                    $xmlItem->addChild('category', $item->category);
+                    $xmlItem->addChild('status', $item->status);
+                    $xmlItem->addChild('content', $item->content);
                     $xmlItem->addChild('user_id', $item->user_id);
                     $xmlItem->addChild('created_at', $item->created_at);
                     $xmlItem->addChild('updated_at', $item->updated_at);
@@ -61,11 +61,11 @@ class PostsController extends Controller
                     return response('Bad Request', 400);
                 }else{
                     $post = Post::create([
-                        'post_title' => $xml->post_title,
-                        'post_author' => $xml->post_author,
-                        'post_category' => $xml->post_category,
-                        'post_status' => $xml->post_status,
-                        'post_content' => $xml->post_content,
+                        'title' => $xml->title,
+                        'author' => $xml->author,
+                        'category' => $xml->category,
+                        'status' => $xml->status,
+                        'content' => $xml->content,
                         'user_id' => $xml->user_id
                     ]);
                     
@@ -102,11 +102,11 @@ class PostsController extends Controller
             $xml = new \SimpleXMLElement('<posts/>');
             $xmlItem = $xml->addChild('post');
             $xmlItem->addChild('id', $post->id);
-            $xmlItem->addChild('post_title', $post->post_title);
-            $xmlItem->addChild('post_author', $post->post_author);
-            $xmlItem->addChild('post_category', $post->post_category);
-            $xmlItem->addChild('post_status', $post->post_status);
-            $xmlItem->addChild('post_content', $post->post_content);
+            $xmlItem->addChild('title', $post->title);
+            $xmlItem->addChild('author', $post->author);
+            $xmlItem->addChild('category', $post->category);
+            $xmlItem->addChild('status', $post->status);
+            $xmlItem->addChild('content', $post->content);
             $xmlItem->addChild('user_id', $post->user_id);
             $xmlItem->addChild('created_at', $post->created_at);
             $xmlItem->addChild('updated_at', $post->updated_at);
@@ -150,11 +150,11 @@ class PostsController extends Controller
                         return response('Post not found', 404);
                     }else{
                         $input = [
-                            'post_title' => $xml->post_title,
-                            'post_author' => $xml->post_author,
-                            'post_category' => $xml->post_category,
-                            'post_status' => $xml->post_status,
-                            'post_content' => $xml->post_content,
+                            'title' => $xml->title,
+                            'author' => $xml->author,
+                            'category' => $xml->category,
+                            'status' => $xml->status,
+                            'content' => $xml->content,
                             'user_id' => $xml->user_id
                         ];
                         $post->fill($input);
@@ -184,7 +184,7 @@ class PostsController extends Controller
 
             $post->delete(); //menghapus post
 
-            $message = ["message" => "delete success", "post_id" => $id];
+            $message = ["message" => "delete success", "id" => $id];
 
             return response()->json($message, 200); //mengembalikan pesan ketika post berhasil dihapus
         }elseif($acceptHeader==="application/xml"){
@@ -198,7 +198,7 @@ class PostsController extends Controller
             if($post->delete()){
                 $xml = new \SimpleXMLElement('<message/>');
                 $xml->addChild('message', 'deleted successfully');
-                $xml->addChild('post_id', $id);
+                $xml->addChild('id', $id);
  
                 return $xml->asXML();
             }else{

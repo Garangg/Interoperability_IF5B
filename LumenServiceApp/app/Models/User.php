@@ -19,7 +19,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var string[]
      */
     protected $fillable = [
-        'user_name', 'user_email', 'user_gender', 'user_phone_number','user_password', 'user_role' 
+        'name', 'email', 'gender', 'phone_number','password', 'role' 
     ];
 
     public $timestamps = true; //untuk melakukan update kolom created_at dan updated_at
@@ -30,6 +30,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var string[]
      */
     protected $hidden = [
-        'user_password',
+        'password',
     ];
 }

@@ -59,7 +59,7 @@ class ProductsController extends Controller
 
         $product->delete(); //menghapus product
 
-        $message = ["message" => "delete success", "product_id" => $id];
+        $message = ["message" => "delete success", "id" => $id];
 
         return response()->json($message,200); //mengembalikan pesan ketika product berhasil dihapus
     }

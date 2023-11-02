@@ -8,5 +8,5 @@ class Tag extends Model{
     // Tag -> table name = tags
     // customed table name;
     // protected $table = 'tags';
-    protected $fillable = ['tag_name', 'tag_description'];
+    protected $fillable = ['name', 'description'];
 }

@@ -61,7 +61,7 @@ class UsersController extends Controller
 
         $user->delete(); //menghapus user
 
-        $message = ["message" => "delete success", "user_id" => $id];
+        $message = ["message" => "delete success", "id" => $id];
 
         return response()->json($message,200); //mengembalikan pesan ketika user berhasil dihapus
     }
