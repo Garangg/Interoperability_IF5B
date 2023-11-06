@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 
 class PostsController extends Controller
 {
@@ -11,14 +13,22 @@ class PostsController extends Controller
     public function index(Request $request)
     {
         $acceptHeader = $request->header("Accept");
+        $posts = Post::OrderBy("id", "ASC")->paginate(2)->toArray();
+            $response = [
+                "total_count" => $posts["total"],
+                "limit" => $posts["per_page"],
+                "pagination" => [
+                    "next_page" => $posts["next_page_url"],
+                    "current_page" => $posts["current_page"]
+                ],
+                "data" => $posts["data"],
+            ];
 
         // 
         if ($acceptHeader === "application/json" || $acceptHeader === "application/xml") {
-            $posts = Post::OrderBy("id", "ASC")->paginate(10);
-
             if ($acceptHeader === "application/json") {
                 // JSON
-                return response()->json($posts->items('data'), 200);
+                return response()->json($response, 200);
             } else {
                 // XML
                 $xml = new \SimpleXMLElement('<posts/>');
@@ -50,10 +60,24 @@ class PostsController extends Controller
 
             if ($contentTypeHeader === 'application/json'){
                 $input = $request->all(); //mengambil semua input dari user
+                $validationRules = [
+                    'title' => 'required|min:5',
+                    'author' => 'required|min:5',
+                    'category' => 'required|min:5',
+                    'status' => 'required|in:draft,published',
+                    'content' => 'required|min:5',
+                    'user_id' => 'required|exists:users,id'
+                ];
+                $validator = Validator::make($input, $validationRules); //membuat validasi inputan user
+
+                if ($validator->fails()){
+                    return response()->json($validator->errors(), 400); //mengembalikan pesan error jika inputan tidak sesuai
+                }
+
                 $post = Post::create($input); //membuat post baru
-                
                 return response()->json($post, 200); //mengembalikan data post baru dalam bentuk json
-            }elseif ($contentTypeHeader === 'application/xml'){
+            }
+            elseif ($contentTypeHeader === 'application/xml'){
                 $xmldata = $request->getContent(); //mengambil data xml
                 $xml = simplexml_load_string($xmldata); //mengubah string xml menjadi object
 
@@ -88,7 +112,7 @@ class PostsController extends Controller
             $post = Post::find($id); //mencari post berdasarkan id
 
             if (!$post) {
-                return response('Post not found', 404);
+                abort(404);
             }
 
             return response()->json($post, 200);
@@ -96,7 +120,7 @@ class PostsController extends Controller
             $post = Post::find($id); //mencari post berdasarkan id
 
             if (!$post) {
-                return response('Post not found', 404);
+                abort(404);
             }
 
             $xml = new \SimpleXMLElement('<posts/>');
@@ -132,6 +156,21 @@ class PostsController extends Controller
                     return response('Post not found', 404);
                 }
 
+                // Validating input
+                $validationRules = [
+                    'title' => 'required|min:5',
+                    'author' => 'required|min:5',
+                    'category' => 'required|min:5',
+                    'status' => 'required|in:draft,published',
+                    'content' => 'required|min:5',
+                    'user_id' => 'required|exists:users,id'
+                ];
+                $validator = Validator::make($input, $validationRules); //membuat validasi inputan user
+
+                if ($validator->fails()){
+                    return response()->json($validator->errors(), 400); //mengembalikan pesan error jika inputan tidak sesuai
+                }
+                
                 $post->fill($input); //mengisi post dengan data baru dari input
                 $post->save(); //menyimpan post ke database
 
