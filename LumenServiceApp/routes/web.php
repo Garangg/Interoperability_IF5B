@@ -17,30 +17,6 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/hello-lumen/{name}', function ($name) {
-    return 'Hello'.' '. $name;
-});
-
-$router->get('/login', ['middleware' => 'login', function () {
-    return "<h1>Hallo, Selamat anda berhasil login</h1>";
-}]);
-
-$router->get('/register', ['middleware' => 'register', function () {
-    return "<h1>Hallo, Selamat anda berhasil register</h1>";
-}]);
-
-$router->get('/logout', ['middleware' => 'logout', function () {
-    return "<h1>Hallo, Selamat anda berhasil logout</h1>";
-}]);
-
-$router->get('/admin', ['middleware' => 'admin', function () {
-    return "<h1>Hallo, Selamat anda berhasil login sebagai admin</h1>";
-}]);
-
-$router->get('/landingpage', ['middleware' => 'user', function () {
-    return "<h1>Hallo, Selamat anda berhasil login sebagai user</h1>";
-}]);
-
 $router->get('/home', 'HomeController@index');
 $router->get('/about', 'AboutController@about');
 $router->get('/dashboard', 'DashboardController@index');
@@ -80,3 +56,7 @@ $router->delete('/orders/{id}', 'OrdersController@destroy');
 $router->get('/categories', 'CategoriesController@index');
 
 $router->get('/tags', 'TagsController@index');
+
+$router->group(['prefix' => 'auth'],function() use ($router){
+    $router->post('/register', 'AuthController@register');
+});
