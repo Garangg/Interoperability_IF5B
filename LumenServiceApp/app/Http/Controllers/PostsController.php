@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 
 class PostsController extends Controller
@@ -13,7 +14,7 @@ class PostsController extends Controller
     public function index(Request $request)
     {
         $acceptHeader = $request->header("Accept");
-        $posts = Post::OrderBy("id", "ASC")->paginate(2)->toArray();
+        $posts = Post::Where(['user_id' => Auth::user()->id])->OrderBy("id", "ASC")->paginate(10)->toArray();
             $response = [
                 "total_count" => $posts["total"],
                 "limit" => $posts["per_page"],
@@ -24,7 +25,6 @@ class PostsController extends Controller
                 "data" => $posts["data"],
             ];
 
-        // 
         if ($acceptHeader === "application/json" || $acceptHeader === "application/xml") {
             if ($acceptHeader === "application/json") {
                 // JSON
@@ -153,7 +153,7 @@ class PostsController extends Controller
                 $post = Post::find($id); //mencari post berdasarkan id
 
                 if (!$post) {
-                    return response('Post not found', 404);
+                    abort(404);
                 }
 
                 // Validating input
