@@ -19,9 +19,9 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => 'required',
             'gender' => 'required|in:male,female',
-            'phone_number' => 'required',
             'password' => 'required',
-            'role' => 'required|in:admin,user'
+            'role' => 'required|in:reader,editor,admin',
+            'phone_number' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -33,9 +33,9 @@ class AuthController extends Controller
         $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->gender = $request->input('gender');
-        $user->phone_number = $request->input('phone_number');
         $user->password = app('hash')->make($request->input('password'));
         $user->role = $request->input('role');
+        $user->phone_number = $request->input('phone_number');
 
         // print_r($user);
         // die();
@@ -69,7 +69,7 @@ class AuthController extends Controller
         return response()->json([
             'token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Auth::factory()->getTTL() *60
+            'expires_in' => Auth::factory()->getTTL() *3600,
         ], 200);
     }
 }

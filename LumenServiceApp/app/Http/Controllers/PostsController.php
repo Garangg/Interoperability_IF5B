@@ -6,7 +6,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Gate;
 
 class PostsController extends Controller
 {
@@ -14,7 +14,21 @@ class PostsController extends Controller
     public function index(Request $request)
     {
         $acceptHeader = $request->header("Accept");
-        $posts = Post::Where(['user_id' => Auth::user()->id])->OrderBy("id", "ASC")->paginate(10)->toArray();
+
+        // Authorization
+        if (Gate::denies('read-post')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You do not have permission to read post'
+            ], 403);
+        }
+        if (Auth::user()->role === 'admin'){
+            $posts = Post::OrderBy("id", "ASC")->paginate(10)->toArray();
+        }else{
+            $posts = Post::Where(['user_id' => Auth::user()->id])->OrderBy("id", "ASC")->paginate(10)->toArray();
+        }
+        // End Authorization
+
             $response = [
                 "total_count" => $posts["total"],
                 "limit" => $posts["per_page"],
@@ -54,6 +68,15 @@ class PostsController extends Controller
     public function store(Request $request)
     {
         $acceptHeader = $request->header("Accept");
+
+        // Authorization
+        if (Gate::denies('create-post')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You do not have permission to create post'
+            ], 403);
+        }
+        // End Authorization
 
         if ($acceptHeader === 'application/json' || $acceptHeader === 'application/xml'){
             $contentTypeHeader = $request->header('Content-Type');
@@ -108,12 +131,23 @@ class PostsController extends Controller
     public function show(Request $request,$id)
     {
         $acceptHeader = $request->header("Accept");
+
+        
         if ($acceptHeader === "application/json"){
             $post = Post::find($id); //mencari post berdasarkan id
-
+            
             if (!$post) {
                 abort(404);
             }
+            
+            // Authorization
+            if (Gate::denies('read-detail-post', $post)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to read detail post'
+                ], 403);
+            }
+            // End Authorization
 
             return response()->json($post, 200);
         }elseif ($acceptHeader === "application/xml"){
@@ -146,16 +180,25 @@ class PostsController extends Controller
         $acceptHeader = $request->header("Accept");
         if ($acceptHeader==="application/json" || $acceptHeader==="application/xml"){
             $contentTypeHeader = $request->header("Content-Type");
-
+            
             if ($contentTypeHeader === "application/json"){
                 // JSON
                 $input = $request->all(); //mengambil semua input dari user
                 $post = Post::find($id); //mencari post berdasarkan id
-
+                
                 if (!$post) {
                     abort(404);
                 }
 
+                // Authorization
+                if (Gate::denies('update-post', $post)) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'You do not have permission to update post'
+                    ], 403);
+                }
+                // End Authorization
+                
                 // Validating input
                 $validationRules = [
                     'title' => 'required|min:5',
@@ -213,13 +256,24 @@ class PostsController extends Controller
     public function destroy(Request $request,$id)
     {
         $acceptHeader = $request->header("Accept");
+
+        
         if ($acceptHeader==="application/json" ){
             // JSON
             $post = Post::find($id); //mencari post berdasarkan id
-
+            
             if (!$post) {
                 return response('Post not found', 404);
             }
+            
+            // Authorization
+            if (Gate::denies('delete-post', $post)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to delete post'
+                ], 403);
+            }
+            // End Authorization
 
             $post->delete(); //menghapus post
 

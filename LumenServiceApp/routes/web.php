@@ -29,14 +29,6 @@ $router->post('/users', 'UsersController@store');
 $router->put('/users/{id}', 'UsersController@update');
 $router->delete('/users/{id}', 'UsersController@destroy');
 
-
-
-$router->get('/posts', 'PostsController@index');
-$router->get('/posts/{id}', 'PostsController@show');
-$router->post('/posts', 'PostsController@store');
-$router->put('/posts/{id}', 'PostsController@update');
-$router->delete('/posts/{id}', 'PostsController@destroy');
-
 $router->get('/tasks', 'TasksController@index');
 $router->get('/tasks/{id}', 'TasksController@show');
 $router->post('/tasks', 'TasksController@store');
@@ -73,3 +65,6 @@ $router->group(['middleware'=> ['auth']], function ($router) {
     $router->put('/products/{id}', 'ProductsController@update');
     $router->delete('/products/{id}', 'ProductsController@destroy');
 });
+
+$router->get('/public/posts', 'PublicController\PostsController@index');
+$router->get('/public/posts/{id}', 'PublicController\PostsController@show');
