@@ -11,4 +11,9 @@ class Post extends Model{
     protected $fillable = ['title','author','category','status','content','user_id'];
 
     public $timestamps = true; //untuk melakukan update kolom created_at dan updated_at
+
+    // Relationship
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

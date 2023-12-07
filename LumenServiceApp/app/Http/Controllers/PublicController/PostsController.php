@@ -23,7 +23,13 @@ class PostsController extends Controller{
     }
 
     public function show($id){
-        $post = Post::find($id);
+        $post = Post::with(['user'=>function($query){
+            $query->select('id','name');
+        }])->find($id);
+        
+        if(!$post){
+            abort(404);
+        }
         return response()->json([
             'status' => 'success',
             'data' => $post
