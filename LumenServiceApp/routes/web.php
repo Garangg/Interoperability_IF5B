@@ -56,7 +56,15 @@ $router->group(['middleware' => ['auth']], function ($router) {
     $router->post('/posts', 'PostsController@store');
     $router->put('/posts/{id}', 'PostsController@update');
     $router->delete('/posts/{id}', 'PostsController@destroy');
+    $router->get('/posts/image/{imageName}', 'PostsController@image');
+    $router->get('/posts/video/{videoName}', 'PostsController@video');
+
+    $router->post('/profiles', 'ProfilesController@store');
 });
+
+$router->get('/profiles', 'ProfilesController@getAll');
+$router->get('/profiles/{userId}', 'ProfilesController@show');
+$router->get('/profiles/image/{imageName}', 'ProfilesController@image');
 
 $router->group(['middleware'=> ['auth']], function ($router) {
     $router->get('/products', 'ProductsController@index');

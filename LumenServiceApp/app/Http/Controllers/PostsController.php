@@ -67,8 +67,6 @@ class PostsController extends Controller
 
     public function store(Request $request)
     {
-        $acceptHeader = $request->header("Accept");
-
         // Authorization
         if (Gate::denies('create-post')) {
             return response()->json([
@@ -77,11 +75,6 @@ class PostsController extends Controller
             ], 403);
         }
         // End Authorization
-
-        if ($acceptHeader === 'application/json' || $acceptHeader === 'application/xml'){
-            $contentTypeHeader = $request->header('Content-Type');
-
-            if ($contentTypeHeader === 'application/json'){
                 $input = $request->all(); //mengambil semua input dari user
                 $validationRules = [
                     'title' => 'required|min:5',
@@ -98,34 +91,38 @@ class PostsController extends Controller
                 }
 
                 $post = Post::create($input); //membuat post baru
-                return response()->json($post, 200); //mengembalikan data post baru dalam bentuk json
-            }
-            elseif ($contentTypeHeader === 'application/xml'){
-                $xmldata = $request->getContent(); //mengambil data xml
-                $xml = simplexml_load_string($xmldata); //mengubah string xml menjadi object
 
-                if ($xml === false){
-                    return response('Bad Request', 400);
-                }else{
-                    $post = Post::create([
-                        'title' => $xml->title,
-                        'author' => $xml->author,
-                        'category' => $xml->category,
-                        'status' => $xml->status,
-                        'content' => $xml->content,
-                        'user_id' => $xml->user_id
-                    ]);
-                    
-                    if ($post->save()){
-                        return $xml -> asXML();
-                    }else{
-                        return response('Internal Server Error', 500);
+                if ($request->hasFile('image')) {
+                    $firName = str_replace(' ', '_', $input['title']);
+
+                    $imgName = $post->id . '_' . $firName . '_' . 'image';
+                    $request->file('image')->move(storage_path('uploads/image_profile'), $imgName);
+
+                    // Delete the previous image
+                    $current_image_path = storage_path('avatar') . '/' . $post->image;
+                    if (file_exists($current_image_path)) {
+                        unlink($current_image_path);
                     }
+
+                    $post->image = $imgName;
                 }
-            }
-        }else{
-            return response('Not Acceptable!', 406);
-        }
+
+                if ($request->hasFile('video')) {
+                    $firName = str_replace(' ', '_', $input['title']);
+
+                    $vidName = $post->id . '_' . $firName . '_' . 'video';
+                    $request->file('video')->move(storage_path('uploads/video_profile'), $vidName);
+
+                    // Delete the previous video
+                    $current_video_path = storage_path('avatar') . '/' . $post->video;
+                    if (file_exists($current_video_path)) {
+                        unlink($current_video_path);
+                    }
+
+                    $post->video = $vidName;
+                }
+
+                return response()->json($post, 200); //mengembalikan data post baru dalam bentuk json
     }
 
     public function show(Request $request,$id)
@@ -300,5 +297,21 @@ class PostsController extends Controller
         }else{
             return response('Not Acceptable!', 406);
         }   
+    }
+
+    public function image($imageName){
+        $imagePath = storage_path('uploads/image_profile') . '/' . $imageName;
+        if (file_exists($imagePath)) {
+            $file = file_get_contents($imagePath);
+            return response($file, 200)->header('Content-Type', 'image/jpeg');
+        }
+    }
+
+    public function video($videoName){
+        $videoPath = storage_path('uploads/video_profile') . '/' . $videoName;
+        if (file_exists($videoPath)) {
+            $file = file_get_contents($videoPath);
+            return response($file, 200)->header('Content-Type', 'video/mp4');
+        }
     }
 }
