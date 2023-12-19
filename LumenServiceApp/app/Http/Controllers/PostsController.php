@@ -16,19 +16,19 @@ class PostsController extends Controller
         $acceptHeader = $request->header("Accept");
 
         // Authorization
-        if (Gate::denies('read-post')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You do not have permission to read post'
-            ], 403);
-        }
-        if (Auth::user()->role === 'admin'){
+        // if (Gate::denies('read-post')) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'You do not have permission to read post'
+        //     ], 403);
+        // }
+        // if (Auth::user()->role === 'admin'){
+            // }else{
+                //     $posts = Post::Where(['user_id' => Auth::user()->id])->OrderBy("id", "ASC")->paginate(10)->toArray();
+                // }
+                // End Authorization
+                
             $posts = Post::OrderBy("id", "ASC")->paginate(10)->toArray();
-        }else{
-            $posts = Post::Where(['user_id' => Auth::user()->id])->OrderBy("id", "ASC")->paginate(10)->toArray();
-        }
-        // End Authorization
-
             $response = [
                 "total_count" => $posts["total"],
                 "limit" => $posts["per_page"],
