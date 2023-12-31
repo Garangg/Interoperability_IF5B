@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 
 class PostsController extends Controller{
-    public function index(){
+    public function index(Request $request){
         $posts = Post::OrderBy("id", "ASC")->paginate(10)->toArray();
+        $acceptHeader = $request->header('Accept');
         $response = [
             "total_count" => $posts["total"],
             "limit" => $posts["per_page"],
@@ -18,8 +19,7 @@ class PostsController extends Controller{
             ],
             "data" => $posts["data"],
         ];
-
-        return response()->json($response, 200);
+        return response()->json($response,200);
     }
 
     public function show($id){
