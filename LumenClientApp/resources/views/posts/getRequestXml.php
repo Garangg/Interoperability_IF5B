@@ -25,18 +25,13 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <?php foreach ($response['data'] as $post) : ?>
+                            <?php foreach ($response as $post) : ?>
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap"><?= $post['id'] ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap"><?= $post['title'] ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap"><?= $post['content'] ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap"><?= $post['created_at'] ?></td>
                                     <td class="px-6 py-4 whitespace-nowrap"><?= $post['updated_at'] ?></td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <a href="get-request-json/<?= $post['id'] ?>">
-                                            <button class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700">Detail</button>
-                                        </a>
-                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

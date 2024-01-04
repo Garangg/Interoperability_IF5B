@@ -1,12 +1,14 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use SimpleXMLElement;
 
-class PostsController extends Controller{
-    public function getRequestJson(Request $request){
+class PostsController extends Controller
+{
+    public function getRequestJson(Request $request)
+    {
         $url = 'http://localhost:8000/public/posts';
         $headers = ['Accept' === 'application/json'];
         // inisiasi curl
@@ -24,10 +26,11 @@ class PostsController extends Controller{
 
         $response = json_decode($result, true);
         // dd($result);
-        return view ('posts/getRequestJson', compact('response'));
+        return view('posts/getRequestJson', compact('response'));
     }
 
-    public function getRequestXml(Request $request){
+    public function getRequestXml(Request $request)
+    {
         $url = 'http://localhost:8000/public/posts';
         $headers = ['Accept' => 'application/xml'];
         // inisiasi curl
@@ -42,13 +45,17 @@ class PostsController extends Controller{
         $result = curl_exec($ch);
         // tutup curl
         curl_close($ch);
-        
-        // dd($response);
-        
+        // var_dump(curl_getinfo($ch));
+
+        // $result = json_decode($result);
+        // echo "<pre>";
+        // print_r($result);
+        // die();
         $parsedXml = new SimpleXMLElement($result);
+
         $response = [];
-        foreach($parsedXml->children() as $item){
-            array_push($response,array(
+        foreach ($parsedXml->children() as $item) {
+            array_push($response, array(
                 'id' => $item->id,
                 'user_id' => $item->user_id,
                 'title' =>  $item->title,
@@ -58,12 +65,13 @@ class PostsController extends Controller{
                 'updated_at' => $item->updated_at
             ));
         }
-        return view ('posts/getRequestXml', compact('response'));
+        return view('posts/getRequestXml', compact('response'));
     }
 
-    public function getRequestJsonById(Request $request, $id){
+    public function getRequestJsonById(Request $request, $id)
+    {
         $id = $request->id;
-        $url = 'http://localhost:8000/public/posts/'.$id;
+        $url = 'http://localhost:8000/public/posts/' . $id;
         $headers = ['Accept' => 'application/json'];
         // inisiasi curl
         $ch = curl_init();
@@ -82,10 +90,11 @@ class PostsController extends Controller{
         $response = json_decode($result, true);
         // dd($response);
 
-        return view ('posts/getRequestJsonById', compact('response'));
+        return view('posts/getRequestJsonById', compact('response'));
     }
 
-    public function postRequestXml(Request $request){
+    public function postRequestXml(Request $request)
+    {
         $url = 'http://localhost:8000/public/posts/';
         $headers = ['Content-Type: application/xml', 'Accept: application/xml'];
         $data = array(
@@ -113,7 +122,7 @@ class PostsController extends Controller{
         $parsedXml = new SimpleXMLElement($result);
         $response = [];
 
-        foreach($parsedXml->children() as $item){
+        foreach ($parsedXml->children() as $item) {
             array_push($response, array(
                 'id' => $item->id,
                 'user_id' => $item->user_id,
@@ -125,6 +134,6 @@ class PostsController extends Controller{
             ));
         }
 
-        return view ('posts/postRequestXml', compact('response'));
+        return view('posts/postRequestXml', compact('response'));
     }
 }
